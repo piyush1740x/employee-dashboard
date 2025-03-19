@@ -1,10 +1,13 @@
 "use client";
 import { students } from "@/data/studentData";
 import { useEffect, useState } from "react";
+import Model from "./Model";
 
 export default function EmployeeCard({ searchQuery }) {
   const [storedStudents, setStoredStudents] = useState([]);
   const [checkedStudents, setCheckedStudents] = useState({});
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("students", JSON.stringify(students));
@@ -40,8 +43,30 @@ export default function EmployeeCard({ searchQuery }) {
       std.id.toString().includes(searchQuery)
   );
 
+  const handleCardClick = (std) => {
+    setSelectedStudent(std);
+    setIsEditing(false);
+  };
+
+  const handleEditClick = (std) => {
+    setSelectedStudent(std);
+    setIsEditing(true);
+  };
+
+  const closeModal = () => {
+    setSelectedStudent(null);
+  };
+
+  const handleUpdate = (updatedStudent) => {
+    const updatedStudents = storedStudents.map((std) =>
+      std.id === updatedStudent.id ? updatedStudent : std
+    );
+    setStoredStudents(updatedStudents);
+    localStorage.setItem("students", JSON.stringify(updatedStudents));
+  };
+
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       {Object.values(checkedStudents).some((isChecked) => isChecked) && (
         <button
           onClick={handleBulkDelete}
@@ -83,13 +108,24 @@ export default function EmployeeCard({ searchQuery }) {
               >
                 Delete
               </button>
-              <button className="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition">
+              <button
+                onClick={() => handleEditClick(std)}
+                className="bg-blue-500 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-600 transition"
+              >
                 Edit
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {selectedStudent && (
+        <Model
+          student={selectedStudent}
+          onClose={closeModal}
+          onUpdate={handleUpdate}
+        />
+      )}
     </div>
   );
 }
