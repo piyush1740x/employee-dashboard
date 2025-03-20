@@ -14,7 +14,7 @@ const Model = ({ student, onClose, onUpdate }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex justify-center items-center h-full w-full bg-green-0 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 border border-gray-100 bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-xl shadow-lg w-96 relative">
         <button
           onClick={onClose}
@@ -29,7 +29,7 @@ const Model = ({ student, onClose, onUpdate }) => {
             alt={editedStudent.name}
             className="w-20 h-20 rounded-full border mb-4"
           />
-
+          
           <input
             type="text"
             name="name"
